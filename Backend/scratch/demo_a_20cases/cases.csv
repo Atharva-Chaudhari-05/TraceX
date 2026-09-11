@@ -1,0 +1,21 @@
+case_id,case_title,investigation_type,status,opened_at,description,synthetic_flag,data_origin,source_dataset,source_record_reference,confidence,scenario_id
+CASE-00139,Synthetic investigation 0139,physical,review,2024-01-13T08:14:06,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-0139
+CASE-00184,Synthetic investigation 0184,physical,closed,2025-03-29T09:09:51,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-0184
+CASE-00349,Synthetic investigation 0349,physical,open,2025-06-04T13:38:00,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-0349
+CASE-00394,Synthetic investigation 0394,physical,closed,2024-04-28T21:48:11,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-0394
+CASE-00529,Synthetic investigation 0529,physical,open,2024-10-29T03:08:00,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-0529
+CASE-00564,Synthetic investigation 0564,physical,closed,2024-05-28T22:23:16,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-0564
+CASE-00959,Synthetic investigation 0959,physical,review,2024-08-06T00:39:36,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-0959
+CASE-01059,Synthetic investigation 1059,physical,open,2025-05-07T12:28:04,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1059
+CASE-01084,Synthetic investigation 1084,physical,open,2025-03-23T16:21:24,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1084
+CASE-01124,Synthetic investigation 1124,physical,open,2024-03-20T15:18:19,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1124
+CASE-01209,Synthetic investigation 1209,physical,open,2025-04-03T02:50:57,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1209
+CASE-01269,Synthetic investigation 1269,physical,open,2025-01-09T11:47:47,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1269
+CASE-01334,Synthetic investigation 1334,physical,open,2024-05-16T07:45:53,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1334
+CASE-01519,Synthetic investigation 1519,physical,closed,2024-04-16T13:11:38,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1519
+CASE-01584,Synthetic investigation 1584,physical,closed,2024-08-24T18:19:57,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1584
+CASE-01591,Synthetic investigation 1591,financial,open,2024-06-18T19:12:20,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-FIN-1591
+CASE-01594,Synthetic investigation 1594,physical,open,2024-02-04T07:03:08,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1594
+CASE-01664,Synthetic investigation 1664,physical,open,2024-10-01T14:39:45,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1664
+CASE-01744,Synthetic investigation 1744,physical,review,2024-05-12T21:51:33,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1744
+CASE-01994,Synthetic investigation 1994,physical,open,2025-02-13T21:50:19,Synthetic investigation case for TraceX analytical testing.,true,SYNTHETIC,,,MEDIUM,SCN-PHYS-1994

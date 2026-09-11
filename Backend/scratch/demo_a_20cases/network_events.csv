@@ -1,0 +1,1 @@
+network_event_id,timestamp,source_device_id,destination_device_id,event_type,protocol_or_socket,request_size,response_size,location_id,synthetic_flag,data_origin,source_dataset,source_record_reference,confidence,scenario_id

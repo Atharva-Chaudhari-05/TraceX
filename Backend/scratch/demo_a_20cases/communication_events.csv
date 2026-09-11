@@ -1,0 +1,1 @@
+communication_id,timestamp,event_type,source_person_id,target_person_id,source_phone_id,target_phone_id,source_device_id,target_device_id,location_id,duration_or_volume,synthetic_flag,data_origin,source_dataset,source_record_reference,confidence,scenario_id

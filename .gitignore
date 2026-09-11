@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+.venv
+venv/
+env/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+.DS_Store
+TRACEX_DATA/
+Frontend/node_modules/
+Backend/venv/
+Backend/__pycache__/

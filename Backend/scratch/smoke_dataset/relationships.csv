@@ -1,0 +1,3 @@
+source_id,target_id,relationship_type,weight,start_date,end_date,description,Synthetic_Flag,Source_Dataset,source_record_reference,scenario_id,Audit_Reference,Provenance_Mode
+PERSON-POS-1,CASE-SMOKE-POS,INVOLVED_IN,1.0,2024-01-01,,Case targets John,True,smoke,smoke_r1,SCN-FIN-001,smoke_audit7_1789075465,direct
+PERSON-NEG-1,CASE-SMOKE-NEG,INVOLVED_IN,1.0,2024-01-02,,Case targets Jane,True,smoke,smoke_r2,OTHER-001,smoke_audit8_1789075465,direct

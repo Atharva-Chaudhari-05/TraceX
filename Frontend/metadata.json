@@ -1,0 +1,6 @@
+{
+  "name": "TraceX - Criminal Network Analysis Platform",
+  "description": "AI-powered criminal network analysis and investigation intelligence platform for Operation Nexus (CASE-NX-2026-001).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

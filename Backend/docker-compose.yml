@@ -1,0 +1,44 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: tracex-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tracex
+      POSTGRES_USER: tracex
+      POSTGRES_PASSWORD: tracex_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - tracex_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tracex -d tracex"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: tracex-neo4j
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: neo4j/tracex_dev_password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - tracex_neo4j_data:/data
+      - tracex_neo4j_logs:/logs
+      - tracex_neo4j_import:/var/lib/neo4j/import
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  tracex_postgres_data:
+  tracex_neo4j_data:
+  tracex_neo4j_logs:
+  tracex_neo4j_import:

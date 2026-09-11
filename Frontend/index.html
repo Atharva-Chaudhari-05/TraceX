@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // Safeguard against 'Cannot set property fetch of #<Window> which has only a getter'
+      (function() {
+        try {
+          var _origFetch = typeof window !== 'undefined' && window.fetch ? window.fetch.bind(window) : undefined;
+          if (_origFetch) {
+            var _currentFetch = _origFetch;
+            var descriptor = {
+              get: function() { return _currentFetch; },
+              set: function(val) { _currentFetch = val; },
+              configurable: true,
+              enumerable: true
+            };
+            try { Object.defineProperty(window, 'fetch', descriptor); } catch (e) {}
+            if (typeof Window !== 'undefined' && Window.prototype) {
+              try { Object.defineProperty(Window.prototype, 'fetch', descriptor); } catch (e) {}
+            }
+          }
+        } catch (err) {}
+      })();
+
+      // Immediate Theme Initializer: Default to light mode
+      (function() {
+        try {
+          var saved = localStorage.getItem('tracex_theme');
+          var theme = saved === 'dark' ? 'dark' : 'light';
+          if (theme === 'light') {
+            document.documentElement.classList.add('light-theme');
+            document.documentElement.classList.remove('dark-theme');
+          } else {
+            document.documentElement.classList.remove('light-theme');
+            document.documentElement.classList.add('dark-theme');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TraceX — AI-Powered Criminal Network Analysis & Intelligence Platform (SIH 2026)</title>
+    <meta name="description" content="TraceX: Next-generation AI-powered criminal network discovery, entity resolution, graph analytics, and evidence intelligence system for law enforcement agencies." />
+    <meta property="og:title" content="TraceX — AI-Powered Criminal Network Analysis Platform" />
+    <meta property="og:description" content="Smart India Hackathon 2026 (PS 26189): Transforming fragmented crime records into actionable connected intelligence." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#0A0F1D] text-[#E2E8F0] antialiased selection:bg-[#0284C7] selection:text-white overflow-hidden">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

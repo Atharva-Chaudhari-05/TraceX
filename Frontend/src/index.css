@@ -1,0 +1,649 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #F8FAFC;
+    background-color: #050507;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(234, 179, 8, 0.07) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(10, 10, 12, 0.95) 0px, transparent 50%),
+      radial-gradient(at 50% 50%, rgba(250, 204, 21, 0.03) 0px, transparent 60%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, .serif-title, .font-serif {
+    font-family: 'Inter', -apple-system, sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+}
+
+/* Glassmorphism Design System - Dark Black & Light Yellow Cyber Theme */
+.glass-panel {
+  background: rgba(14, 14, 18, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.65);
+}
+
+.glass-card {
+  background: rgba(18, 18, 22, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.5);
+}
+
+.glass-card-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-card-hover:hover {
+  background: rgba(26, 26, 32, 0.90);
+  border-color: rgba(250, 204, 21, 0.45);
+  box-shadow: 0 8px 30px rgba(250, 204, 21, 0.18);
+  transform: translateY(-2px);
+}
+
+.glass-pill {
+  background: rgba(18, 18, 22, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-search-bar {
+  background: rgba(18, 18, 22, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.glass-search-bar:focus-within {
+  border-color: rgba(250, 204, 21, 0.8);
+  box-shadow: 0 0 25px rgba(250, 204, 21, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Animations for 2D Vehicle & Person Icons */
+@keyframes radar-ping {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.35); opacity: 0.2; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.animate-radar {
+  animation: radar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes vehicle-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-2px) rotate(-1deg); }
+}
+.animate-vehicle {
+  animation: vehicle-float 3s ease-in-out infinite;
+}
+
+@keyframes cyber-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(250, 204, 21, 0.6)); }
+  50% { filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.9)); }
+}
+.animate-glow {
+  animation: cyber-glow 2.5s ease-in-out infinite;
+}
+
+/* Custom crisp scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(5, 5, 7, 0.9);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #EAB308;
+}
+
+/* ==========================================================================
+   LIGHT THEME DESIGN SYSTEM: MODERN TECH INDIGO & DEEP VIOLET
+   Silicon Valley Intelligence Platform Theme (#4F46E5, #4338CA, #7C3AED, #EEF2FF, #C7D2FE)
+   Applied exhaustively to every single element from smallest to largest.
+   Dark mode remains 100% UNTOUCHED when .light-theme is absent.
+   ========================================================================== */
+
+.light-theme {
+  --theme-indigo-primary: #4F46E5;
+  --theme-indigo-dark: #4338CA;
+  --theme-violet-accent: #7C3AED;
+  --theme-lavender-tint: #EEF2FF;
+  --theme-lavender-border: #C7D2FE;
+  --theme-page-bg: #F8FAFC;
+  --theme-card-bg: #FFFFFF;
+  --theme-heading: #0F172A;
+  --theme-body: #475569;
+  --theme-muted: #64748B;
+  color-scheme: light;
+}
+
+html.light-theme body,
+.light-theme body,
+body.light-theme {
+  background-color: #F0F6FC !important;
+  color: #0F172A !important;
+  background-image: 
+    radial-gradient(circle at 50% 10%, #FFFFFF 0%, #F1F7FD 35%, #E1EFFB 70%, #D5E8F8 100%) !important;
+  background-attachment: fixed !important;
+}
+
+/* Light theme page background wash behind content */
+.light-theme div.h-screen.w-screen,
+.light-theme main[class*="bg-[#050507]"] {
+  background-color: #F0F6FC !important;
+  background-image: 
+    radial-gradient(circle at 50% 10%, #FFFFFF 0%, #F1F7FD 35%, #E1EFFB 70%, #D5E8F8 100%) !important;
+  background-attachment: fixed !important;
+}
+
+/* 1. Light Glassmorphism Panels & Cards */
+.light-theme .glass-panel {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05) !important;
+}
+
+.light-theme .glass-card {
+  background: #FFFFFF !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+.light-theme .glass-card-hover:hover {
+  background: #FFFFFF !important;
+  border-color: #C7D2FE !important;
+  box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.12), 0 8px 10px -6px rgba(79, 70, 229, 0.08) !important;
+  transform: translateY(-2px);
+}
+
+.light-theme .glass-pill {
+  background: #F8FAFC !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.light-theme .glass-search-bar {
+  background: #F8FAFC !important;
+  border: 1px solid #CBD5E1 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  color: #0F172A !important;
+}
+
+.light-theme .glass-search-bar:focus-within {
+  background: #FFFFFF !important;
+  border-color: #4F46E5 !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+.light-theme .glass-search-bar input {
+  color: #0F172A !important;
+}
+
+.light-theme .glass-search-bar input::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* 2. Hardcoded Dark Hex Backgrounds to Crisp White & Slate in Light Mode */
+.light-theme [class*="bg-[#050507]"],
+.light-theme [class*="bg-[#09090D]"],
+.light-theme [class*="bg-[#0D0D11]"],
+.light-theme [class*="bg-[#0A0A0E]"],
+.light-theme [class*="bg-[#111116]"],
+.light-theme [class*="bg-[#121218]"],
+.light-theme [class*="bg-[#18181D]"],
+.light-theme [class*="bg-[#181822]"],
+.light-theme [class*="bg-[#18181C]"],
+.light-theme [class*="bg-[#141418]"],
+.light-theme [class*="bg-[#1C1C24]"],
+.light-theme [class*="bg-[#0e0e13]"],
+.light-theme [class*="bg-[#1A1A22]"],
+.light-theme [class*="bg-[#101014]"],
+.light-theme [class*="bg-[#16161E]"],
+.light-theme [class*="bg-[#1C1910]"],
+.light-theme [class*="bg-[#15151b]"],
+.light-theme [class*="bg-[#1b1b24]"],
+.light-theme [class*="bg-black/"] {
+  background-color: #FFFFFF !important;
+}
+
+/* Secondary dark nested cards get subtle soft slate background for contrast & hierarchy */
+.light-theme div[class*="bg-[#050507]/80"],
+.light-theme div[class*="bg-[#050507]/70"],
+.light-theme div[class*="bg-[#050507]/60"],
+.light-theme div[class*="bg-[#050507]/90"],
+.light-theme div[class*="bg-[#050507]/95"],
+.light-theme div[class*="bg-[#0A0A0E]/95"],
+.light-theme div[class*="bg-[#121218]"],
+.light-theme div[class*="bg-[#111116]"],
+.light-theme div[class*="bg-[#18181C]"],
+.light-theme div[class*="bg-[#0D0D11]"],
+.light-theme div[class*="bg-[#141418]"],
+.light-theme tr[class*="hover:bg-[#050507]"]:hover,
+.light-theme [class*="hover:bg-[#050507]"]:hover,
+.light-theme [class*="hover:bg-[#141418]"]:hover {
+  background-color: #F8FAFC !important;
+}
+
+/* Custom Tag Colors & Badges (e.g. BETWEENNESS, ACTIVE FEED) in Light Mode */
+.light-theme [class*="bg-rose-950"] {
+  background-color: #FFE4E6 !important; /* rose-100 */
+  border-color: #FECDD3 !important; /* rose-200 */
+}
+
+.light-theme [class*="bg-amber-950"] {
+  background-color: #FEF3C7 !important; /* amber-100 */
+  border-color: #FDE68A !important; /* amber-200 */
+}
+
+.light-theme [class*="bg-emerald-950"] {
+  background-color: #D1FAE5 !important; /* emerald-100 */
+  border-color: #A7F3D0 !important; /* emerald-200 */
+}
+
+.light-theme [class*="bg-cyan-950"] {
+  background-color: #CFFAFE !important; /* cyan-100 */
+  border-color: #A5F3FC !important; /* cyan-200 */
+}
+
+.light-theme [class*="bg-indigo-950"] {
+  background-color: #E0E7FF !important; /* indigo-100 */
+  border-color: #C7D2FE !important; /* indigo-200 */
+}
+
+.light-theme [class*="bg-blue-950"] {
+  background-color: #DBEAFE !important; /* blue-100 */
+  border-color: #BFDBFE !important; /* blue-200 */
+}
+
+.light-theme [class*="bg-slate-900"], .light-theme [class*="bg-slate-950"] {
+  background-color: #F1F5F9 !important; /* slate-100 */
+  border-color: #E2E8F0 !important; /* slate-200 */
+}
+
+/* Ensure text colors inside tags are visible on light backgrounds */
+.light-theme [class*="text-rose-400"], .light-theme [class*="text-rose-300"] {
+  color: #E11D48 !important; /* rose-600 */
+}
+.light-theme [class*="text-amber-400"], .light-theme [class*="text-amber-300"] {
+  color: #D97706 !important; /* amber-600 */
+}
+.light-theme [class*="text-emerald-400"], .light-theme [class*="text-emerald-300"] {
+  color: #059669 !important; /* emerald-600 */
+}
+.light-theme [class*="text-cyan-400"], .light-theme [class*="text-cyan-300"] {
+  color: #0891B2 !important; /* cyan-600 */
+}
+.light-theme [class*="text-indigo-400"], .light-theme [class*="text-indigo-300"] {
+  color: #4F46E5 !important; /* indigo-600 */
+}
+.light-theme [class*="text-blue-400"], .light-theme [class*="text-blue-300"] {
+  color: #2563EB !important; /* blue-600 */
+}
+.light-theme [class*="text-slate-400"], .light-theme [class*="text-slate-300"] {
+  color: #475569 !important; /* slate-600 */
+}
+
+/* 3. Layout Shells & Nav Components */
+.light-theme main {
+  background-color: #F8FAFC !important;
+}
+
+.light-theme #tactical-navigation-sidebar {
+  background-color: #FFFFFF !important;
+  border-right-color: #E2E8F0 !important;
+}
+
+.light-theme header {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border-bottom-color: #E2E8F0 !important;
+}
+
+/* 4. Typography & Text Readability in Light Mode */
+.light-theme .text-\[\#F8FAFC\],
+.light-theme [class*="text-"][class*="F8FAFC"] {
+  color: #0F172A !important;
+}
+
+/* Solid Primary Buttons Text Override */
+.light-theme [class~="bg-[#4F46E5]"] *,
+.light-theme [class~="bg-[#4F46E5]"],
+.light-theme [class~="bg-[#4338CA]"] *,
+.light-theme [class~="bg-[#4338CA]"],
+.light-theme button.bg-\[\#4F46E5\] *,
+.light-theme button.bg-\[\#4338CA\] *,
+.light-theme a.bg-\[\#4F46E5\] *,
+.light-theme a.bg-\[\#4338CA\] *,
+.light-theme [class*="group"]:hover [class*="group-hover:text-white"],
+.light-theme [class*="group"]:hover [class*="group-hover:!text-white"],
+.light-theme [class*="group-hover:text-white"]:hover,
+.light-theme [class*="group-hover:!text-white"] {
+  color: #FFFFFF !important;
+}
+
+/* Ensure highlighted/active panels & pills in light mode have dark, readable text */
+.light-theme aside button[class*="bg-indigo-"] *,
+.light-theme aside button[class*="bg-[#4F46E5]/"] *,
+.light-theme #investigation-records-view button[class*="bg-[#4F46E5]/"] *,
+.light-theme #investigation-records-view button[class*="bg-indigo-"] *,
+.light-theme #show-hidden-connection-btn,
+.light-theme #show-hidden-connection-btn * {
+  color: #050507 !important;
+}
+
+.light-theme .text-\[\#94A3B8\],
+.light-theme [class*="text-"][class*="94A3B8"] {
+  color: #475569 !important;
+}
+
+.light-theme .text-\[\#64748B\],
+.light-theme [class*="text-"][class*="64748B"] {
+  color: #64748B !important;
+}
+
+/* 5. PRIMARY BUTTONS: Modern Tech Indigo (#4F46E5) with Hover (#4338CA) */
+.light-theme .bg-\[\#FACC15\],
+.light-theme .bg-\[\#F59E0B\],
+.light-theme .bg-\[\#EAB308\],
+.light-theme button[class~="bg-[#FACC15]"],
+.light-theme button[class~="bg-[#F59E0B]"],
+.light-theme button[class~="bg-[#EAB308]"],
+.light-theme a[class~="bg-[#FACC15]"],
+.light-theme a[class~="bg-[#F59E0B]"],
+.light-theme a[class~="bg-[#EAB308]"],
+.light-theme [role="button"][class~="bg-[#FACC15]"] {
+  background-color: #4F46E5 !important;
+  color: #FFFFFF !important;
+  border-color: #4F46E5 !important;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.28) !important;
+}
+
+.light-theme .bg-\[\#FACC15\]:hover,
+.light-theme .bg-\[\#F59E0B\]:hover,
+.light-theme .bg-\[\#EAB308\]:hover,
+.light-theme button[class~="bg-[#FACC15]"]:hover,
+.light-theme button[class~="bg-[#F59E0B]"]:hover,
+.light-theme button[class~="bg-[#EAB308]"]:hover,
+.light-theme a[class~="bg-[#FACC15]"]:hover,
+.light-theme [class*="hover:bg-[#EAB308]"]:hover,
+.light-theme [class*="hover:bg-[#FACC15]"]:hover,
+.light-theme [class*="hover:bg-[#F59E0B]"]:hover {
+  background-color: #4338CA !important;
+  color: #FFFFFF !important;
+  border-color: #4338CA !important;
+}
+
+/* Ensure text and SVG icons inside solid primary action buttons are pure white */
+.light-theme button[class~="bg-[#FACC15]"] *,
+.light-theme button[class~="bg-[#F59E0B]"] *,
+.light-theme button[class~="bg-[#EAB308]"] *,
+.light-theme a[class~="bg-[#FACC15]"] *,
+.light-theme a[class~="bg-[#F59E0B]"] *,
+.light-theme a[class~="bg-[#EAB308]"] * {
+  color: #FFFFFF !important;
+}
+
+/* 6. PRIMARY TEXT, LABELS & HEADINGS ACCENT: Modern Tech Indigo (#4F46E5) */
+.light-theme .text-\[\#FACC15\],
+.light-theme .text-\[\#F59E0B\],
+.light-theme .text-\[\#EAB308\],
+.light-theme [class*="text-[#FACC15]"],
+.light-theme [class*="text-[#F59E0B]"],
+.light-theme [class*="text-[#EAB308]"],
+.light-theme .text-yellow-400,
+.light-theme .text-yellow-500,
+.light-theme .text-amber-400,
+.light-theme .text-amber-500,
+.light-theme .text-amber-300,
+.light-theme .text-yellow-300 {
+  color: #4F46E5 !important;
+}
+
+/* Hover & Group Hover on Accented Text */
+.light-theme [class*="hover:text-[#FACC15]"]:hover,
+.light-theme [class*="hover:text-[#F59E0B]"]:hover,
+.light-theme [class*="hover:text-[#EAB308]"]:hover,
+.light-theme [class*="group"]:hover [class*="group-hover:text-[#FACC15]"],
+.light-theme [class*="group"]:hover [class*="group-hover:text-[#F59E0B]"],
+.light-theme [class*="group"]:hover [class*="group-hover:text-[#EAB308]"] {
+  color: #4338CA !important;
+}
+
+/* 7. SOFT LAVENDER PILLS, BADGES & TINTED BACKGROUNDS (#EEF2FF + #C7D2FE) */
+.light-theme [class*="bg-[#FACC15]/5"],
+.light-theme [class*="bg-[#F59E0B]/5"] {
+  background-color: rgba(79, 70, 229, 0.04) !important;
+}
+
+.light-theme [class*="bg-[#FACC15]/10"],
+.light-theme [class*="bg-[#FACC15]/15"],
+.light-theme [class*="bg-[#FACC15]/20"],
+.light-theme [class*="bg-[#FACC15]/25"],
+.light-theme [class*="bg-[#FACC15]/30"],
+.light-theme [class*="bg-[#FACC15]/40"],
+.light-theme [class*="bg-[#F59E0B]/10"],
+.light-theme [class*="bg-[#F59E0B]/15"],
+.light-theme [class*="bg-[#F59E0B]/20"],
+.light-theme [class*="bg-[#F59E0B]/25"],
+.light-theme [class*="bg-[#F59E0B]/30"],
+.light-theme [class*="bg-[#F59E0B]/40"],
+.light-theme [class*="bg-[#EAB308]/10"],
+.light-theme [class*="bg-[#EAB308]/20"],
+.light-theme [class*="bg-amber-500/"],
+.light-theme [class*="bg-yellow-500/"] {
+  background-color: #EEF2FF !important;
+  color: #4F46E5 !important;
+  border-color: #C7D2FE !important;
+}
+
+.light-theme [class*="bg-[#FACC15]/10"] *,
+.light-theme [class*="bg-[#FACC15]/15"] *,
+.light-theme [class*="bg-[#FACC15]/20"] *,
+.light-theme [class*="bg-[#FACC15]/30"] *,
+.light-theme [class*="bg-[#F59E0B]/10"] *,
+.light-theme [class*="bg-[#F59E0B]/15"] *,
+.light-theme [class*="bg-[#F59E0B]/20"] * {
+  color: #4F46E5 !important;
+}
+
+/* 8. BORDERS & CARDS ACCENT HIGHLIGHTS */
+.light-theme [class*="border-[#FACC15]"],
+.light-theme [class*="border-[#F59E0B]"],
+.light-theme [class*="border-[#EAB308]"],
+.light-theme [class*="border-amber-"],
+.light-theme [class*="border-yellow-"] {
+  border-color: #C7D2FE !important;
+}
+
+.light-theme [class*="hover:border-[#FACC15]"]:hover,
+.light-theme [class*="hover:border-[#F59E0B]"]:hover,
+.light-theme [class*="group"]:hover [class*="group-hover:border-[#FACC15]"] {
+  border-color: #4F46E5 !important;
+}
+
+.light-theme [class*="border-white/"] {
+  border-color: #E2E8F0 !important;
+}
+.light-theme [class*="border-white/5"],
+.light-theme [class*="border-white/10"] {
+  border-color: #E2E8F0 !important;
+}
+.light-theme [class*="border-white/15"],
+.light-theme [class*="border-white/20"],
+.light-theme [class*="border-white/30"] {
+  border-color: #CBD5E1 !important;
+}
+
+/* 9. RINGS & FOCUS ACCENTS */
+.light-theme [class*="ring-[#FACC15]"],
+.light-theme [class*="ring-[#F59E0B]"],
+.light-theme [class*="ring-amber-"],
+.light-theme [class*="ring-yellow-"] {
+  --tw-ring-color: #C7D2FE !important;
+  box-shadow: 0 0 0 2px #C7D2FE !important;
+}
+
+/* 10. GRADIENTS & TIMELINES */
+.light-theme [class*="from-[#FACC15]"],
+.light-theme [class*="from-[#EAB308]"],
+.light-theme [class*="from-[#F59E0B]"] {
+  --tw-gradient-from: #4F46E5 !important;
+}
+.light-theme [class*="to-[#FACC15]"],
+.light-theme [class*="to-[#F59E0B]"],
+.light-theme [class*="to-[#EAB308]"] {
+  --tw-gradient-to: #7C3AED !important;
+}
+.light-theme [class*="via-[#FACC15]"],
+.light-theme [class*="via-[#F59E0B]"] {
+  --tw-gradient-stops: var(--tw-gradient-from), #6366F1, var(--tw-gradient-to) !important;
+}
+
+/* Timeline Vertical Line */
+.light-theme [class*="before:from-[#FACC15]"]::before,
+.light-theme [class*="before:to-[#FACC15]"]::before {
+  background-image: linear-gradient(to bottom, rgba(79, 70, 229, 0.35), rgba(203, 213, 225, 0.5), rgba(79, 70, 229, 0.35)) !important;
+}
+
+/* 11. GLOW SHADOWS & ANIMATIONS */
+.light-theme [class*="shadow-[0_0_"][class*="250, 204, 21"],
+.light-theme [class*="shadow-[0_0_"][class*="245, 158, 11"],
+.light-theme [class*="shadow-yellow-"] {
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.16) !important;
+}
+
+.light-theme .animate-glow {
+  animation: light-indigo-glow 2.5s ease-in-out infinite !important;
+}
+@keyframes light-indigo-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(79, 70, 229, 0.4)); }
+  50% { filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.6)); }
+}
+
+/* 12. SVG ICONS OVERRIDE */
+.light-theme svg.text-\[\#FACC15\],
+.light-theme svg.text-\[\#F59E0B\],
+.light-theme svg.text-\[\#EAB308\],
+.light-theme [class*="text-[#FACC15]"] > svg,
+.light-theme [class*="text-[#F59E0B]"] > svg,
+.light-theme [class*="text-[#EAB308]"] > svg,
+.light-theme svg[class*="text-[#FACC15]"],
+.light-theme svg[class*="text-[#F59E0B]"],
+.light-theme svg[class*="text-[#EAB308]"] {
+  color: #4F46E5 !important;
+}
+
+/* 13. TRANSLUCENT OVERLAYS */
+.light-theme [class*="bg-white/5"],
+.light-theme [class*="bg-white/10"] {
+  background-color: #F1F5F9 !important;
+}
+
+.light-theme [class*="hover:bg-white/10"]:hover,
+.light-theme [class*="hover:bg-white/5"]:hover {
+  background-color: #EEF2FF !important;
+  color: #4F46E5 !important;
+}
+
+/* 14. FORM INPUTS, DROPDOWNS & SELECTS */
+.light-theme input,
+.light-theme select,
+.light-theme textarea {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+.light-theme input:focus,
+.light-theme select:focus,
+.light-theme textarea:focus {
+  border-color: #4F46E5 !important;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18) !important;
+}
+
+.light-theme input::placeholder {
+  color: #94A3B8 !important;
+}
+
+.light-theme option {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+}
+
+/* 15. FLOATING MODALS, POPOVERS & DROPDOWNS */
+.light-theme [class*="bg-[#050507]"].absolute,
+.light-theme [class*="bg-[#09090D]"].absolute,
+.light-theme [class*="bg-[#0A0A0E]"].absolute,
+.light-theme [class*="bg-[#0D0D11]"].absolute {
+  background-color: #FFFFFF !important;
+  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.12) !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* 16. SYSTEM HEALTH & GREEN STATUS (Emerald #10B981) */
+.light-theme .text-\[\#10B981\],
+.light-theme [class*="text-[#10B981]"],
+.light-theme .text-emerald-400,
+.light-theme .text-emerald-500 {
+  color: #10B981 !important;
+}
+
+.light-theme .bg-\[\#10B981\],
+.light-theme .bg-emerald-500 {
+  background-color: #10B981 !important;
+}
+
+/* 17. INVESTIGATION GRAPH VIEW LIGHT MODE ADAPTATION */
+.light-theme #investigation-graph-view {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+.light-theme #investigation-graph-view svg rect#graph-canvas-bg {
+  fill: #F8FAFC !important;
+}
+
+/* 18. CUSTOM SCROLLBARS IN LIGHT MODE */
+.light-theme ::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+.light-theme ::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: #4F46E5;
+}
+
+/* 19. REPORT TABLES IN LIGHT MODE */
+.light-theme thead[class*="bg-[#0C0C10]"],
+.light-theme thead[class*="bg-[#0c0c10]"],
+.light-theme [class*="bg-[#0C0C10]"] {
+  background-color: #F1F5F9 !important;
+  color: #334155 !important;
+  border-color: #CBD5E1 !important;
+}
+
+

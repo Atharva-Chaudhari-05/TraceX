@@ -1,0 +1,113 @@
+{
+  "version": "1.0",
+  "description": "TraceX existing dataset to canonical schema mapping",
+  "source": "TRACEX_DATA",
+  "entities": {
+    "persons.csv": {
+      "canonical_label": "Person",
+      "id_field": "person_id"
+    },
+    "phones.csv": {
+      "canonical_label": "Phone",
+      "id_field": "phone_id"
+    },
+    "accounts.csv": {
+      "canonical_label": "Account",
+      "id_field": "account_id"
+    },
+    "devices.csv": {
+      "canonical_label": "Device",
+      "id_field": "device_id"
+    },
+    "locations.csv": {
+      "canonical_label": "Location",
+      "id_field": "location_id"
+    },
+    "organizations.csv": {
+      "canonical_label": "Organisation",
+      "id_field": "organization_id"
+    },
+    "vehicles.csv": {
+      "canonical_label": "Vehicle",
+      "id_field": "vehicle_id"
+    },
+    "documents.csv": {
+      "canonical_label": "Document",
+      "id_field": "document_id"
+    },
+    "cases.csv": {
+      "canonical_label": "Case",
+      "id_field": "case_id"
+    }
+  },
+  "events": {
+    "transactions.csv": {
+      "canonical_label": "Event",
+      "event_type": "Transaction",
+      "id_field": "transaction_id"
+    },
+    "communication_events.csv": {
+      "canonical_label": "Event",
+      "event_type": "CommunicationEvent",
+      "id_field": "communication_id"
+    },
+    "network_events.csv": {
+      "canonical_label": "Event",
+      "event_type": "NetworkEvent",
+      "id_field": "network_event_id"
+    },
+    "physical_access_events.csv": {
+      "canonical_label": "Event",
+      "event_type": "PhysicalAccessEvent",
+      "id_field": "physical_event_id"
+    },
+    "incidents.csv": {
+      "canonical_label": "Event",
+      "event_type": "Incident",
+      "id_field": "incident_id"
+    }
+  },
+  "reference": {
+    "crime_context.csv": {
+      "canonical_label": "CrimeStatistic",
+      "id_field": "context_id"
+    }
+  },
+  "provenance_mapping": {
+    "synthetic_flag": "Synthetic_Flag",
+    "source_dataset": "Source_Dataset",
+    "source_record_reference": "source_record_reference",
+    "scenario_id": "Generation_Batch_ID",
+    "confidence": "Confidence_Level",
+    "data_origin": "origin_indicator",
+    "relationship_origin": "origin_indicator"
+  },
+  "generated_fields": {
+    "Provenance_Mode": {
+      "type": "derived",
+      "allowed_values": [
+        "direct",
+        "validated-join",
+        "synthetic-design"
+      ]
+    },
+    "Audit_Reference": {
+      "type": "deterministic",
+      "unique": true
+    }
+  },
+  "relationship_types": [
+    "ASSOCIATED_WITH",
+    "COMMUNICATES_WITH",
+    "CONNECTED_TO",
+    "HAS_DOCUMENT",
+    "HAS_EVENT",
+    "INVOLVED_IN",
+    "LOCATED_AT",
+    "OWNS",
+    "PARTICIPATED_IN",
+    "TRANSFERRED_TO",
+    "USES",
+    "WORKS_FOR"
+  ]
+}

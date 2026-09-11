@@ -1,0 +1,95 @@
+{
+  "version": "1.0",
+  "description": "TraceX deterministic remediation specification for existing synthetic dataset",
+  "source_directory": "../TRACEX_DATA",
+  "output_directory": "../TRACEX_PREPARED",
+  "source_must_remain_unchanged": true,
+
+  "field_mappings": {
+    "synthetic_flag": {
+      "canonical_field": "Synthetic_Flag",
+      "action": "rename",
+      "rule": "Preserve existing boolean value exactly."
+    },
+    "source_dataset": {
+      "canonical_field": "Source_Dataset",
+      "action": "preserve",
+      "rule": "Preserve existing value. Do not invent values for operational synthetic records."
+    },
+    "source_record_reference": {
+      "canonical_field": "source_record_reference",
+      "action": "preserve",
+      "rule": "Preserve existing value. Do not generate replacements."
+    },
+    "scenario_id": {
+      "canonical_field": "Generation_Batch_ID",
+      "action": "rename",
+      "rule": "Rename the field while preserving every existing value and NULL."
+    },
+    "confidence": {
+      "canonical_field": "Confidence_Level",
+      "action": "normalize",
+      "rule": "Normalize existing confidence values to canonical High/Medium/Low representation."
+    },
+    "data_origin": {
+      "canonical_field": "origin_indicator",
+      "action": "preserve",
+      "rule": "Retain as an origin indicator; do not treat it as Provenance_Mode."
+    },
+    "relationship_origin": {
+      "canonical_field": "relationship_origin",
+      "action": "preserve",
+      "rule": "Retain source origin indicator; derive canonical Provenance_Mode separately."
+    }
+  },
+
+  "generated_fields": {
+    "Provenance_Mode": {
+      "action": "derive",
+      "allowed_values": [
+        "direct",
+        "validated-join",
+        "synthetic-design"
+      ],
+      "rule": "For the current synthetic MVP dataset, operational synthetic records use synthetic-design unless a more specific approved provenance rule applies."
+    },
+    "Audit_Reference": {
+      "action": "generate",
+      "rule": "Generate a deterministic unique provenance reference from source filename and primary record ID. It must not equal the primary ID, source_record_reference, or Generation_Batch_ID."
+    },
+    "relationship_type_tag": {
+      "action": "derive",
+      "allowed_values": [
+        "direct_source_backed",
+        "design_synthetic"
+      ],
+      "rule": "Current relationships.csv records have relationship_origin=SYNTHETIC and therefore map to design_synthetic."
+    }
+  },
+
+  "special_rules": {
+    "communication_events": {
+      "rule": "NULL source/target phone IDs are valid when device-based communication references are present. Do not fabricate phone IDs."
+    },
+    "timestamps": {
+      "rule": "NULL timestamps on static relationships are allowed. Do not create timestamps for static relationships."
+    },
+    "crime_context": {
+      "rule": "Keep as reference-layer CrimeStatistic data. Preserve source_dataset=01_NCRB_India_2023, source_record_reference, synthetic_flag=false, and data_origin=DERIVED."
+    },
+    "identity": {
+      "rule": "Do not reuse identities from benchmark/reference datasets and do not create identity-level joins to external sources."
+    }
+  },
+
+  "execution_policy": {
+    "mode": "deterministic",
+    "overwrite_source": false,
+    "create_output_directory": true,
+    "validate_before_write": true,
+    "validate_after_write": true,
+    "preserve_row_counts": true,
+    "preserve_primary_ids": true,
+    "preserve_relationship_ids": true
+  }
+}

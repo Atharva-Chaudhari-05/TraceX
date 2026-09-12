@@ -57,6 +57,7 @@ export const Sidebar: React.FC = () => {
     entities,
     timelineEvents,
     evidenceRecords,
+    dataSources,
   } = useInvestigation();
   const isLight = theme === 'light';
 
@@ -112,7 +113,7 @@ export const Sidebar: React.FC = () => {
           id: 'sources',
           label: 'Data Sources',
           icon: Database,
-          badge: 'Active',
+          badge: dataSources.length > 0 ? `${dataSources.length} Feeds` : undefined,
           badgeColor: 'cyan',
         },
         {

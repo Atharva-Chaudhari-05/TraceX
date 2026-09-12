@@ -26,6 +26,7 @@ class Person(CanonicalNode):
     person_id: str
     name: Optional[str] = None
     age: Optional[int] = None
+    organization_id: Optional[str] = None
 
 
 class Phone(CanonicalNode):
@@ -90,6 +91,9 @@ class Transaction(Event):
     event_type: Literal["Transaction"] = "Transaction"
     transaction_id: str
     amount: Optional[float] = None
+    sender_account_id: Optional[str] = None
+    receiver_account_id: Optional[str] = None
+    person_id: Optional[str] = None
 
 
 class CommunicationEvent(Event):
@@ -98,21 +102,27 @@ class CommunicationEvent(Event):
     # Nullable communication fields as per constraints
     source_phone_id: Optional[str] = None
     target_phone_id: Optional[str] = None
+    person_id: Optional[str] = None
 
 
 class NetworkEvent(Event):
     event_type: Literal["NetworkEvent"] = "NetworkEvent"
     network_event_id: str
+    person_id: Optional[str] = None
 
 
 class PhysicalAccessEvent(Event):
     event_type: Literal["PhysicalAccessEvent"] = "PhysicalAccessEvent"
     physical_event_id: str
+    person_id: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class Incident(Event):
     event_type: Literal["Incident"] = "Incident"
     incident_id: str
+    person_id: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class CrimeStatistic(CanonicalNode):

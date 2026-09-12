@@ -97,3 +97,23 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     access_token = _process_login(db, form_data.username, form_data.password)
     
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+from pydantic import BaseModel
+from backend.app.auth.dependencies import get_current_user
+
+class UserProfileResponse(BaseModel):
+    id: str
+    email: str
+    roles: list[str]
+
+@router.get("/me", response_model=UserProfileResponse)
+def read_users_me(current_user: User = Depends(get_current_user)):
+    """
+    Get current user profile including roles.
+    """
+    return {
+        "id": str(current_user.id),
+        "email": current_user.email,
+        "roles": [r.name for r in current_user.roles]
+    }

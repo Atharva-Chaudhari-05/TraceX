@@ -31,29 +31,32 @@ def _bootstrap_dev_user():
     if not email or not password:
         return
         
-    with Session(engine) as session:
-        user = session.scalar(select(User).where(User.email == email))
-        if not user:
-            # Create bootstrap user
-            new_user = User(
-                email=email,
-                hashed_password=get_password_hash(password),
-                is_active=True,
-            )
-            
-            # Fetch Admin role
-            admin_role = session.scalar(select(Role).where(Role.name == "Admin"))
-            if admin_role:
-                new_user.roles.append(admin_role)
+    try:
+        with Session(engine) as session:
+            user = session.scalar(select(User).where(User.email == email))
+            if not user:
+                # Create bootstrap user
+                new_user = User(
+                    email=email,
+                    hashed_password=get_password_hash(password),
+                    is_active=True,
+                )
                 
-            session.add(new_user)
-            session.commit()
-        else:
-            # Ensure the user has the Admin role if they were already created
-            admin_role = session.scalar(select(Role).where(Role.name == "Admin"))
-            if admin_role and admin_role not in user.roles:
-                user.roles.append(admin_role)
+                # Fetch Admin role
+                admin_role = session.scalar(select(Role).where(Role.name == "Admin"))
+                if admin_role:
+                    new_user.roles.append(admin_role)
+                    
+                session.add(new_user)
                 session.commit()
+            else:
+                # Ensure the user has the Admin role if they were already created
+                admin_role = session.scalar(select(Role).where(Role.name == "Admin"))
+                if admin_role and admin_role not in user.roles:
+                    user.roles.append(admin_role)
+                    session.commit()
+    except Exception as exc:
+        pass
 
 
 @asynccontextmanager
@@ -76,10 +79,11 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins,
-    allow_credentials=settings.cors_credentials,
-    allow_methods=settings.cors_methods,
-    allow_headers=settings.cors_headers,
+    allow_origins=[],
+    allow_origin_regex=".*",
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 app.add_middleware(RequestCorrelationMiddleware)
 setup_exception_handlers(app)

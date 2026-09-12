@@ -320,34 +320,7 @@ export const RelationshipPathExplorerView: React.FC<RelationshipPathExplorerView
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-white/10">
-          <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
-            <span className="text-[10px] uppercase text-[#64748B] font-bold mr-1">Demo Presets:</span>
-            <button
-              type="button"
-              onClick={() => {
-                setSourceId('ent-rahul');
-                setTargetId('ent-xyz');
-                setIsSourceOpen(false);
-                setIsTargetOpen(false);
-              }}
-              className="px-3 py-1.5 glass-card hover:bg-white/10 border border-white/10 hover:border-[#FACC15]/40 rounded-full text-[11px] text-[#FACC15] font-mono transition-all cursor-pointer"
-            >
-              Rahul Sharma ➔ XYZ Traders (5 Hops)
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setSourceId('ent-rahul');
-                setTargetId('ent-acc-772145');
-                setIsSourceOpen(false);
-                setIsTargetOpen(false);
-              }}
-              className="px-3 py-1.5 glass-card hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-full text-[11px] text-[#94A3B8] font-mono transition-all cursor-pointer"
-            >
-              Rahul ➔ Beneficiary A/C 772145
-            </button>
-          </div>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-3 pt-3 border-t border-white/10">
 
           <button
             type="button"
@@ -363,20 +336,7 @@ export const RelationshipPathExplorerView: React.FC<RelationshipPathExplorerView
 
       {/* Path Results & Hop Visualizer */}
       <div className="space-y-4">
-        {/* Investigative Impact Card */}
-        <div className="p-5 glass-panel border border-[#10B981]/40 rounded-3xl text-xs space-y-2 shadow-lg">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between font-mono gap-1">
-            <span className="font-bold text-[#10B981] uppercase tracking-wider flex items-center space-x-2">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Investigative Breakthrough: Indirect Hawala Nexus Proved</span>
-            </span>
-            <span className="text-[#64748B] text-[11px]">Total Indirect Distance: 5 Hops • Zero Direct Contact</span>
-          </div>
-          <p className="text-[#94A3B8] leading-relaxed">
-            <strong className="text-[#F8FAFC]">Judicial Significance:</strong> Rahul Sharma and XYZ Traders have{' '}
-            <span className="text-[#EF4444] font-semibold">zero recorded telephone calls</span> or direct banking transfers. Under single-hop querying, no connection exists. TraceX fuses physical CCTV surveillance, cellular tower colocation, AI entity deduplication, and banking transfer telemetry to prove criminal conspiracy under Section 120B IPC.
-          </p>
-        </div>
+        {/* Path Results */}
 
         {/* Step-by-Step 5-Hop Cards */}
         <div className="space-y-3.5">

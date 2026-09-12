@@ -2,8 +2,11 @@ from typing import List, Optional
 import subprocess
 import os
 import sys
+import shutil
+import uuid
+from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, UploadFile, File
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 
@@ -79,3 +82,33 @@ def trigger_ingestion(
     subprocess.Popen([sys.executable, script_path])
     
     return {"message": "Ingestion process triggered in background.", "status": "Subprocess Dispatched"}
+
+def run_pipeline_for_folder(folder_path: str):
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    ingest_script = os.path.join(base_dir, "scripts", "run_ingestion.py")
+    project_script = os.path.join(base_dir, "scripts", "run_projection.py")
+    
+    # Run Ingestion
+    subprocess.run([sys.executable, ingest_script, "--source", folder_path], check=True)
+    # Run Projection
+    subprocess.run([sys.executable, project_script], check=True)
+
+@router.post("/upload")
+async def upload_file(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    current_user: User = Depends(require_role(["Admin", "Investigator"]))
+):
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
+    upload_dir = os.path.join(base_dir, "scratch", "ui_uploads", str(uuid.uuid4()))
+    os.makedirs(upload_dir, exist_ok=True)
+    
+    file_path = os.path.join(upload_dir, file.filename)
+    
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+        
+    background_tasks.add_task(run_pipeline_for_folder, upload_dir)
+    
+    return {"message": "File uploaded successfully. Ingestion pipeline started.", "file_name": file.filename}
+

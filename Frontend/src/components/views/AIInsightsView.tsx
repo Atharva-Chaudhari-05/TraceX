@@ -300,55 +300,63 @@ export const AIInsightsView: React.FC = () => {
                 {/* Key Entities Involved */}
                 <div className="glass-card border border-white/10 p-5 rounded-2xl space-y-3">
                   <div className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#FACC15]">
-                    Key Entities Involved ({ins.relatedEntityIds.length})
+                    Key Entities Involved ({ins.relatedEntityIds?.length || 0})
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {ins.relatedEntityIds.map((entId) => {
-                      const ent = entities.find((e) => e.id === entId);
-                      const name = ent ? ent.name : entId;
-                      const type = ent ? ent.type : 'entity';
-                      return (
-                        <button
-                          key={entId}
-                          onClick={() => navigateTo('entities', { entityId: entId })}
-                          className="flex items-center space-x-1.5 px-3 py-1.5 glass-panel hover:bg-white/10 border border-white/10 hover:border-[#FACC15] text-xs font-mono font-semibold text-[#F8FAFC] rounded-full transition-all cursor-pointer"
-                        >
-                          <span>{name}</span>
-                          <span className="text-[9px] font-mono uppercase text-[#FACC15] bg-[#050507] px-1.5 py-0.2 rounded-full border border-white/10">
-                            {type}
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                  {ins.relatedEntityIds && ins.relatedEntityIds.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {ins.relatedEntityIds.map((entId) => {
+                        const ent = entities.find((e) => e.id === entId);
+                        const name = ent ? ent.name : entId;
+                        const type = ent ? ent.type : 'entity';
+                        return (
+                          <button
+                            key={entId}
+                            onClick={() => navigateTo('entities', { entityId: entId })}
+                            className="flex items-center space-x-1.5 px-3 py-1.5 glass-panel hover:bg-white/10 border border-white/10 hover:border-[#FACC15] text-xs font-mono font-semibold text-[#F8FAFC] rounded-full transition-all cursor-pointer"
+                          >
+                            <span>{name}</span>
+                            <span className="text-[9px] font-mono uppercase text-[#FACC15] bg-[#050507] px-1.5 py-0.2 rounded-full border border-white/10">
+                              {type}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="text-[#94A3B8] font-sans text-xs italic">No specific entities linked.</div>
+                  )}
                 </div>
 
                 {/* Supporting Evidence Records */}
                 <div className="glass-card border border-white/10 p-5 rounded-2xl space-y-3">
                   <div className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#FACC15]">
-                    Supporting Evidence Records ({ins.supportingEvidenceIds.length})
+                    Supporting Evidence Records ({ins.supportingEvidenceIds?.length || 0})
                   </div>
-                  <div className="space-y-1.5">
-                    {ins.supportingEvidenceIds.map((evId) => {
-                      const ev = evidenceRecords.find((r) => r.id === evId);
-                      return (
-                        <div
-                          key={evId}
-                          onClick={() => navigateTo('evidence', { evidenceId: evId })}
-                          className="flex items-center justify-between p-2.5 glass-panel border border-white/10 hover:border-[#FACC15] rounded-xl cursor-pointer transition-colors group"
-                        >
-                          <div className="flex items-center space-x-2 min-w-0">
-                            <FileSpreadsheet className="w-3.5 h-3.5 text-[#FACC15] shrink-0" />
-                            <span className="font-mono font-bold text-[#FACC15] text-xs shrink-0">{evId}</span>
-                            <span className="text-xs text-[#F8FAFC] font-sans truncate group-hover:text-[#FACC15]">
-                              {ev?.title || 'Ingested Record'}
-                            </span>
+                  {ins.supportingEvidenceIds && ins.supportingEvidenceIds.length > 0 ? (
+                    <div className="space-y-1.5">
+                      {ins.supportingEvidenceIds.map((evId) => {
+                        const ev = evidenceRecords.find((r) => r.id === evId);
+                        return (
+                          <div
+                            key={evId}
+                            onClick={() => navigateTo('evidence', { evidenceId: evId })}
+                            className="flex items-center justify-between p-2.5 glass-panel border border-white/10 hover:border-[#FACC15] rounded-xl cursor-pointer transition-colors group"
+                          >
+                            <div className="flex items-center space-x-2 min-w-0">
+                              <FileSpreadsheet className="w-3.5 h-3.5 text-[#FACC15] shrink-0" />
+                              <span className="font-mono font-bold text-[#FACC15] text-xs shrink-0">{evId}</span>
+                              <span className="text-xs text-[#F8FAFC] font-sans truncate group-hover:text-[#FACC15]">
+                                {ev?.title || 'Ingested Record'}
+                              </span>
+                            </div>
+                            <ChevronRight className="w-3.5 h-3.5 text-[#64748B] group-hover:text-[#FACC15] shrink-0 ml-2" />
                           </div>
-                          <ChevronRight className="w-3.5 h-3.5 text-[#64748B] group-hover:text-[#FACC15] shrink-0 ml-2" />
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="text-[#94A3B8] font-sans text-xs italic">No supporting evidence linked.</div>
+                  )}
                 </div>
               </div>
 
@@ -404,8 +412,7 @@ export const AIInsightsView: React.FC = () => {
                   {/* Action 3: View in Graph */}
                   <button
                     onClick={() => {
-                      if (ins.id === 'INS-001') setShowHiddenConnection(true);
-                      navigateTo('graph', { highlightPath: ins.id === 'INS-001' });
+                      navigateTo('graph');
                     }}
                     className="px-4 py-2 bg-[#FACC15] hover:bg-[#EAB308] text-[#050507] text-xs font-mono uppercase tracking-wider font-bold flex items-center space-x-1.5 transition-all rounded-full shadow-lg cursor-pointer"
                   >
@@ -414,13 +421,15 @@ export const AIInsightsView: React.FC = () => {
                   </button>
 
                   {/* Action 4: Inspect Evidence */}
-                  <button
-                    onClick={() => navigateTo('evidence', { evidenceId: ins.supportingEvidenceIds[0] })}
-                    className="px-4 py-2 glass-card hover:bg-white/10 text-[#94A3B8] hover:text-[#F8FAFC] text-xs font-mono uppercase tracking-wider font-semibold border border-white/10 rounded-full transition-all flex items-center space-x-1.5 cursor-pointer"
-                  >
-                    <FileSpreadsheet className="w-3.5 h-3.5 text-[#FACC15]" />
-                    <span>Inspect Evidence</span>
-                  </button>
+                  {ins.supportingEvidenceIds && ins.supportingEvidenceIds.length > 0 && (
+                    <button
+                      onClick={() => navigateTo('evidence', { evidenceId: ins.supportingEvidenceIds[0] })}
+                      className="px-4 py-2 glass-card hover:bg-white/10 text-[#94A3B8] hover:text-[#F8FAFC] text-xs font-mono uppercase tracking-wider font-semibold border border-white/10 rounded-full transition-all flex items-center space-x-1.5 cursor-pointer"
+                    >
+                      <FileSpreadsheet className="w-3.5 h-3.5 text-[#FACC15]" />
+                      <span>Inspect Evidence</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

@@ -26,6 +26,7 @@ export const GlobalSearchModal: React.FC = () => {
     navigateTo,
     setSelectedEntityId,
     setSelectedRecordId,
+    caseData,
   } = useInvestigation();
 
   const [query, setQuery] = useState('');
@@ -123,7 +124,7 @@ export const GlobalSearchModal: React.FC = () => {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search all 15 indexed entities, evidence records, phone IMEIs, or accounts (e.g. Rahul, 889922, EV-001)..."
+            placeholder={`Search ${entities.length} indexed entities, evidence records, phone IMEIs, or accounts...`}
             className="flex-1 bg-transparent border-none text-xs font-mono text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:ring-0"
           />
           {query && (
@@ -146,7 +147,7 @@ export const GlobalSearchModal: React.FC = () => {
           <div>
             <div className="text-[10px] font-mono uppercase tracking-wider text-[#64748B] font-bold mb-2 flex items-center justify-between">
               <span>Indexed Entities ({results.entities.length})</span>
-              <span className="text-[#FACC15]">OPERATION NEXUS</span>
+              <span className="text-[#FACC15]">{caseData?.name || 'Active Case'}</span>
             </div>
 
             {results.entities.length === 0 ? (
@@ -184,7 +185,7 @@ export const GlobalSearchModal: React.FC = () => {
                           )}
                         </div>
                         <div className="text-[11px] text-[#94A3B8] truncate mt-0.5">
-                          {e.role || e.identifier || 'Operation Nexus Entity'}
+                          {e.role || e.identifier || `${caseData?.name || 'Active Case'} Entity`}
                         </div>
                       </div>
                     </div>
@@ -245,7 +246,7 @@ export const GlobalSearchModal: React.FC = () => {
         {/* Footer */}
         <div className="px-4 py-2.5 bg-[#050507] border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-[#64748B]">
           <span>Tip: Press [Ctrl+K] anytime to search</span>
-          <span>15 Entities • 9 Evidence Records</span>
+          <span>{entities.length} Entities • {evidenceRecords.length} Evidence Records</span>
         </div>
       </div>
     </div>

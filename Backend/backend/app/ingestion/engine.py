@@ -133,13 +133,49 @@ class PipelineEngine:
                         
                         if is_relationship:
                             canonical_record = CanonicalRelationship(**mapped_record)
+                            batch.valid_records += 1
+                            yield canonical_record
                         else:
                             canonical_record = target_model(**mapped_record)
+                            batch.valid_records += 1
+                            yield canonical_record
                             
-                        batch.valid_records += 1
-                        
-                        # Yield to the CanonicalSink
-                        yield canonical_record
+                            source_node_id = None
+                            for id_field in ["communication_id", "transaction_id", "incident_id", "network_event_id", "physical_event_id", "person_id"]:
+                                if id_field in mapped_record and mapped_record[id_field] is not None:
+                                    source_node_id = mapped_record[id_field]
+                                    break
+                                    
+                            if source_node_id:
+                                fk_mappings = {
+                                    "source_phone_id": "PARTICIPATED_IN",
+                                    "target_phone_id": "PARTICIPATED_IN",
+                                    "sender_account_id": "PARTICIPATED_IN",
+                                    "receiver_account_id": "PARTICIPATED_IN",
+                                    "person_id": "INVOLVED_IN",
+                                    "location_id": "LOCATED_AT",
+                                    "organization_id": "WORKS_FOR",
+                                    "source_device_id": "PARTICIPATED_IN",
+                                    "destination_device_id": "PARTICIPATED_IN"
+                                }
+                                for fk, rel_type in fk_mappings.items():
+                                    if fk in mapped_record and mapped_record[fk] and fk != id_field:
+                                        rel_payload = {
+                                            "Synthetic_Flag": mapped_record.get("Synthetic_Flag", True),
+                                            "Audit_Reference": mapped_record.get("Audit_Reference", "UNKNOWN"),
+                                            "Provenance_Mode": "implicit_derived",
+                                            "relationship_type": rel_type,
+                                            "timestamp": mapped_record.get("timestamp"),
+                                        }
+                                        
+                                        if rel_type == "WORKS_FOR" or rel_type == "LOCATED_AT":
+                                            rel_payload["source_id"] = source_node_id
+                                            rel_payload["target_id"] = mapped_record[fk]
+                                        elif rel_type == "INVOLVED_IN" or rel_type == "PARTICIPATED_IN":
+                                            rel_payload["source_id"] = mapped_record[fk]
+                                            rel_payload["target_id"] = source_node_id
+                                            
+                                        yield CanonicalRelationship(**rel_payload)
                         
                     except ValidationError as e:
                         self._log_row_error(batch, record, str(e))

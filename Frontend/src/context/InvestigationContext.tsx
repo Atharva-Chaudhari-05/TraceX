@@ -103,6 +103,7 @@ interface InvestigationContextType {
   // Auth & RBAC
   currentUser: UserProfile;
   isAuthenticated: boolean;
+  isInitializingAuth: boolean;
   loginUser: (email: string, password?: string, role?: UserRole) => Promise<boolean>;
   logoutUser: () => void;
 
@@ -218,21 +219,44 @@ const InvestigationContext = createContext<InvestigationContextType | undefined>
 
 export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Authentication & RBAC (3 Roles: Investigator, Intelligence Analyst, System Administrator)
-  const [currentUser, setCurrentUser] = useState<UserProfile>(() => {
-    try {
-      const saved = localStorage.getItem('tracex_auth_user');
-      if (saved) return JSON.parse(saved);
-    } catch (e) {}
-    return DEMO_USERS_MAP.Investigator;
-  });
+  const [currentUser, setCurrentUser] = useState<UserProfile>(DEMO_USERS_MAP.Investigator);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isInitializingAuth, setIsInitializingAuth] = useState<boolean>(true);
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    try {
+  useEffect(() => {
+    const initAuth = async () => {
       const token = localStorage.getItem('tracex_auth_token');
-      if (token) return true;
-    } catch (e) {}
-    return false;
-  });
+      if (token) {
+        try {
+          const meResponse = await api.get('/api/v1/auth/me');
+          const { roles: backendRoles, email: backendEmail, id: backendId } = meResponse.data;
+          
+          let mappedRole: UserRole = 'Investigator';
+          if (backendRoles.includes('Admin')) mappedRole = 'System Administrator';
+          else if (backendRoles.includes('Analyst')) mappedRole = 'Intelligence Analyst';
+          else if (backendRoles.includes('Investigator')) mappedRole = 'Investigator';
+
+          const userProfile: UserProfile = {
+            id: backendId,
+            name: backendEmail.split('@')[0],
+            email: backendEmail,
+            role: mappedRole,
+            badgeNumber: `TRACEX-${mappedRole.substring(0,3).toUpperCase()}`,
+            department: 'Cyber Forensics Division',
+            status: 'Active',
+            lastLogin: 'Just now',
+          };
+          setCurrentUser(userProfile);
+          setIsAuthenticated(true);
+        } catch (e) {
+          localStorage.removeItem('tracex_auth_token');
+          setIsAuthenticated(false);
+        }
+      }
+      setIsInitializingAuth(false);
+    };
+    initAuth();
+  }, []);
 
   const loginUser = async (email: string, password?: string, role?: UserRole): Promise<boolean> => {
     try {
@@ -244,28 +268,25 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
       const { access_token } = response.data;
       localStorage.setItem('tracex_auth_token', access_token);
 
-      const target = Object.values(DEMO_USERS_MAP).find(
-        (u) =>
-          (email && u.email.toLowerCase() === email.toLowerCase()) ||
-          (role && u.role === role)
-      );
+      // Fetch actual role from backend
+      const meResponse = await api.get('/api/v1/auth/me');
+      const { roles: backendRoles, email: backendEmail, id: backendId } = meResponse.data;
+      
+      let mappedRole: UserRole = 'Investigator';
+      if (backendRoles.includes('Admin')) mappedRole = 'System Administrator';
+      else if (backendRoles.includes('Analyst')) mappedRole = 'Intelligence Analyst';
+      else if (backendRoles.includes('Investigator')) mappedRole = 'Investigator';
 
-      const userProfile: UserProfile = target
-        ? {
-            id: target.id,
-            name: target.name,
-            email: target.email,
-            role: target.role,
-            badgeNumber: target.badgeNumber,
-            department: target.department,
-            status: target.status,
-            lastLogin: 'Just now',
-          }
-        : {
-            ...DEMO_USERS_MAP[role || 'Investigator'],
-            email: email || DEMO_USERS_MAP.Investigator.email,
-            lastLogin: 'Just now',
-          };
+      const userProfile: UserProfile = {
+        id: backendId,
+        name: backendEmail.split('@')[0],
+        email: backendEmail,
+        role: mappedRole,
+        badgeNumber: `TRACEX-${mappedRole.substring(0,3).toUpperCase()}`,
+        department: 'Cyber Forensics Division',
+        status: 'Active',
+        lastLogin: 'Just now',
+      };
 
       setCurrentUser(userProfile);
       setIsAuthenticated(true);
@@ -324,7 +345,7 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
   
   const [entities, setEntities] = useState<Entity[]>([]);
   const [evidenceRecords, setEvidenceRecords] = useState<EvidenceRecord[]>([]);
-  const [dataSources, setDataSources] = useState<DataSourceItem[]>(INITIAL_DATA_SOURCES);
+  const [dataSources, setDataSources] = useState<DataSourceItem[]>([]);
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
   const [aiInsights, setAiInsights] = useState<AIInsight[]>([]);
   const [patterns, setPatterns] = useState<PatternItem[]>([]);
@@ -349,6 +370,31 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
     };
     loadCases();
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (cases.length > 0 && currentCaseId) {
+      const activeCase = cases.find(c => c.id === currentCaseId);
+      if (activeCase) {
+        const payload = activeCase.payload || {};
+        setCaseData({
+          caseId: activeCase.id,
+          name: payload.title || payload.name || activeCase.label || 'Unknown Case',
+          description: payload.description || payload.summary || 'No description available.',
+          classification: payload.classification || 'RESTRICTED',
+          priority: payload.priority || 'High',
+          status: payload.status || 'ACTIVE',
+          leadInvestigator: payload.leadOfficer || 'Demo Investigator',
+          jurisdiction: payload.jurisdiction || payload.agency || 'General Jurisdiction',
+          stats: {
+            entities: payload.entities_count || 0,
+            relationships: payload.relationships_count || 0,
+            events: payload.events_count || 0,
+            documents: payload.documents_count || 0,
+          }
+        });
+      }
+    }
+  }, [cases, currentCaseId]);
 
   useEffect(() => {
     if (!isAuthenticated || !currentCaseId) return;
@@ -381,15 +427,27 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
   const activePatterns = realPatterns || patterns;
 
   // Selection states
-  const [selectedEntityId, setSelectedEntityId] = useState<string | null>('ent-rahul');
-  const [selectedRecordId, setSelectedRecordId] = useState<string | null>('EV-001');
-  const [selectedEvidenceId, setSelectedEvidenceId] = useState<string | null>('EV-002');
-  const [selectedInsightId, setSelectedInsightId] = useState<string | null>('INS-001');
-  const [selectedGraphNodeId, setSelectedGraphNodeId] = useState<string | null>('ent-rahul');
+  const [selectedEntityId, setSelectedEntityId] = useState<string | null>(null);
+  const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
+  const [selectedEvidenceId, setSelectedEvidenceId] = useState<string | null>(null);
+  const [selectedInsightId, setSelectedInsightId] = useState<string | null>(null);
+  const [selectedGraphNodeId, setSelectedGraphNodeId] = useState<string | null>(null);
   const [selectedGraphEdgeId, setSelectedGraphEdgeId] = useState<string | null>(null);
 
   // Resolution & Graph state
-  const [entityMatch, setEntityMatch] = useState<EntityMatchItem>(INITIAL_ENTITY_MATCH);
+  const [entityMatch, setEntityMatch] = useState<{
+    status: 'pending' | 'resolved' | 'rejected' | 'idle';
+    confidence: number;
+    matchScore: number;
+    matchedAttributes: string[];
+    discrepancies: string[];
+  }>({
+    status: 'idle',
+    confidence: 0,
+    matchScore: 0,
+    matchedAttributes: [],
+    discrepancies: [],
+  });
   const [showHiddenConnection, setShowHiddenConnection] = useState<boolean>(false);
   const [isIngestingModalOpen, setIsIngestingModalOpen] = useState<boolean>(false);
 
@@ -645,6 +703,16 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
 
   const switchCase = (caseId: string) => {
     setCurrentCaseId(caseId);
+    // Reset selection state to prevent cross-case data leakage
+    setSelectedEntityId(null);
+    setSelectedRecordId(null);
+    setSelectedEvidenceId(null);
+    setSelectedInsightId(null);
+    setSelectedGraphNodeId(null);
+    setSelectedGraphEdgeId(null);
+    setRealGraphNodes(null);
+    setRealGraphEdges(null);
+    setEntityMatch(INITIAL_ENTITY_MATCH);
     saveAuditLog('CASE_SWITCH', `Switched active investigation case context to ${caseId}.`);
   };
 
@@ -886,22 +954,13 @@ export const InvestigationProvider: React.FC<{ children: ReactNode }> = ({ child
       value={{
         currentUser,
         isAuthenticated,
+        isInitializingAuth,
         loginUser,
         logoutUser,
         currentView,
         setCurrentView,
         navigateTo,
-        caseData: cases.find(c => c.id === currentCaseId) ? {
-          ...CASE_METADATA,
-          caseId: currentCaseId,
-          name: cases.find(c => c.id === currentCaseId)?.payload?.name || currentCaseId,
-          jurisdiction: cases.find(c => c.id === currentCaseId)?.payload?.jurisdiction || cases.find(c => c.id === currentCaseId)?.payload?.agency || 'General Jurisdiction',
-          leadInvestigator: cases.find(c => c.id === currentCaseId)?.payload?.leadOfficer || 'Unassigned',
-          status: cases.find(c => c.id === currentCaseId)?.payload?.status || 'ACTIVE',
-          description: cases.find(c => c.id === currentCaseId)?.payload?.description || cases.find(c => c.id === currentCaseId)?.payload?.summary || 'No modus operandi recorded',
-          priority: cases.find(c => c.id === currentCaseId)?.payload?.priority || 'High',
-          classification: cases.find(c => c.id === currentCaseId)?.payload?.classification || 'RESTRICTED',
-        } : CASE_METADATA,
+        caseData,
         cases,
         currentCaseId,
         switchCase,

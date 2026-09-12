@@ -61,8 +61,8 @@ export const PatternAnalysisView: React.FC = () => {
 
       {/* Grid: Key Centrality Rankings + Connection Paths */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left: Key Entities Connectivity Ranking (5 cols) */}
-        <div className="lg:col-span-5 glass-panel border border-white/10 p-6 rounded-3xl space-y-5 shadow-xl">
+        {/* Key Entities Connectivity Ranking */}
+        <div className="lg:col-span-12 glass-panel border border-white/10 p-6 rounded-3xl space-y-5 shadow-xl">
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <div>
               <div className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#FACC15]">
@@ -182,85 +182,7 @@ export const PatternAnalysisView: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Connection Paths & Multi-Hop Tracer (7 cols) */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Multi-Hop Path Card */}
-          <div className="glass-panel border border-white/10 p-6 rounded-3xl space-y-5 shadow-xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center space-x-2.5">
-                <GitBranch className="w-4 h-4 text-[#FACC15]" />
-                <h3 className="text-lg font-bold text-[#F8FAFC] font-mono">The 5-Hop Hidden Hawala Conduit</h3>
-              </div>
-              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 border rounded-full bg-rose-950/50 text-rose-400 border-rose-800/60 uppercase">
-                Zero Direct Contact
-              </span>
-            </div>
 
-            <p className="text-xs text-[#94A3B8] leading-relaxed font-sans">
-              Rahul Sharma and XYZ Traders have zero recorded telephone calls or direct banking transfers. TraceX definitively links them through this indirect 5-hop pathway:
-            </p>
-
-            {/* Visual Pathway Chain - Highlights on Hover */}
-            <div className={`glass-card p-5 text-xs space-y-2 rounded-2xl border font-mono ${isLight ? 'border-slate-300' : 'border-white/10'}`}>
-              <div className={`group/hop p-2.5 rounded-xl border border-transparent transition-all cursor-pointer ${isLight ? 'hover:border-[#4F46E5]/50 hover:bg-[#EEF2FF]' : 'hover:border-[#FACC15]/50 hover:bg-[#FACC15]/10'}`}>
-                <div className={`flex items-center space-x-2.5 ${isLight ? 'text-[#0F172A]' : 'text-[#F8FAFC]'}`}>
-                  <span className={`w-2.5 h-2.5 rounded-full border transition-all ${isLight ? 'bg-slate-300 border-slate-400 group-hover/hop:scale-125 group-hover/hop:bg-[#4F46E5] group-hover/hop:border-[#4F46E5] group-hover/hop:shadow-[0_0_10px_rgba(79,70,229,0.8)]' : 'bg-white/20 border-white/30 group-hover/hop:scale-125 group-hover/hop:bg-[#FACC15] group-hover/hop:border-[#FACC15] group-hover/hop:shadow-[0_0_10px_rgba(250, 204, 21,0.8)]'}`} />
-                  <span className={`font-bold transition-colors ${isLight ? 'group-hover/hop:text-[#4F46E5]' : 'group-hover/hop:text-[#FACC15]'}`}>[Hop 1] Rahul Sharma (Primary Subject)</span>
-                </div>
-                <div className={`pl-5 text-xs font-sans mt-0.5 ${isLight ? 'text-[#64748B]' : 'text-[#94A3B8]'}`}>↓ Physical Handover at Platform 3 (08:45 AM) &amp; 241s Encrypted CDR Call (08:55 AM) [EV-001, EV-002]</div>
-              </div>
-              
-              <div className={`group/hop p-2.5 rounded-xl border border-transparent transition-all cursor-pointer ${isLight ? 'hover:border-[#4F46E5]/50 hover:bg-[#EEF2FF]' : 'hover:border-[#FACC15]/50 hover:bg-[#FACC15]/10'}`}>
-                <div className={`flex items-center space-x-2.5 ${isLight ? 'text-[#0F172A]' : 'text-[#F8FAFC]'}`}>
-                  <span className={`w-2.5 h-2.5 rounded-full border transition-all ${isLight ? 'bg-slate-300 border-slate-400 group-hover/hop:scale-125 group-hover/hop:bg-[#4F46E5] group-hover/hop:border-[#4F46E5] group-hover/hop:shadow-[0_0_10px_rgba(79,70,229,0.8)]' : 'bg-white/20 border-white/30 group-hover/hop:scale-125 group-hover/hop:bg-[#FACC15] group-hover/hop:border-[#FACC15] group-hover/hop:shadow-[0_0_10px_rgba(250, 204, 21,0.8)]'}`} />
-                  <span className={`font-bold transition-colors ${isLight ? 'group-hover/hop:text-[#4F46E5]' : 'group-hover/hop:text-[#FACC15]'}`}>[Hop 2] Ajay Patil ↔ A. Patil (94% AI Entity Resolution)</span>
-                </div>
-                <div className={`pl-5 text-xs font-sans mt-0.5 ${isLight ? 'text-[#64748B]' : 'text-[#94A3B8]'}`}>↓ Shared Mobile +91-98234-11876 &amp; Matching Green Park Address [AI_RESOLVER_V1]</div>
-              </div>
-
-              <div className={`group/hop p-2.5 rounded-xl border border-transparent transition-all cursor-pointer ${isLight ? 'hover:border-[#4F46E5]/50 hover:bg-[#EEF2FF]' : 'hover:border-[#FACC15]/50 hover:bg-[#FACC15]/10'}`}>
-                <div className={`flex items-center space-x-2.5 ${isLight ? 'text-[#0F172A]' : 'text-[#F8FAFC]'}`}>
-                  <span className={`w-2.5 h-2.5 rounded-full border transition-all ${isLight ? 'bg-slate-300 border-slate-400 group-hover/hop:scale-125 group-hover/hop:bg-[#4F46E5] group-hover/hop:border-[#4F46E5] group-hover/hop:shadow-[0_0_10px_rgba(79,70,229,0.8)]' : 'bg-white/20 border-white/30 group-hover/hop:scale-125 group-hover/hop:bg-[#FACC15] group-hover/hop:border-[#FACC15] group-hover/hop:shadow-[0_0_10px_rgba(250, 204, 21,0.8)]'}`} />
-                  <span className={`font-bold transition-colors ${isLight ? 'group-hover/hop:text-[#4F46E5]' : 'group-hover/hop:text-[#FACC15]'}`}>[Hop 3] A/C 889922 (SBI) ➔ A/C 482701 (HDFC Mule)</span>
-                </div>
-                <div className={`pl-5 text-xs font-sans mt-0.5 ${isLight ? 'text-[#64748B]' : 'text-[#94A3B8]'}`}>↓ Core Banking Wire: ₹50,000 Transferred via SFMS NetBanking (11:48 AM IST) [EV-003]</div>
-              </div>
-
-              <div className={`group/hop p-2.5 rounded-xl border border-transparent transition-all cursor-pointer ${isLight ? 'hover:border-[#4F46E5]/50 hover:bg-[#EEF2FF]' : 'hover:border-[#FACC15]/50 hover:bg-[#FACC15]/10'}`}>
-                <div className={`flex items-center space-x-2.5 ${isLight ? 'text-[#0F172A]' : 'text-[#F8FAFC]'}`}>
-                  <span className={`w-2.5 h-2.5 rounded-full border transition-all ${isLight ? 'bg-slate-300 border-slate-400 group-hover/hop:scale-125 group-hover/hop:bg-[#4F46E5] group-hover/hop:border-[#4F46E5] group-hover/hop:shadow-[0_0_10px_rgba(79,70,229,0.8)]' : 'bg-white/20 border-white/30 group-hover/hop:scale-125 group-hover/hop:bg-[#FACC15] group-hover/hop:border-[#FACC15] group-hover/hop:shadow-[0_0_10px_rgba(250, 204, 21,0.8)]'}`} />
-                  <span className={`font-bold transition-colors ${isLight ? 'group-hover/hop:text-[#4F46E5]' : 'group-hover/hop:text-[#FACC15]'}`}>[Hop 4] Rapid Smurfing Dispersal ➔ Neha Verma</span>
-                </div>
-                <div className={`pl-5 text-xs font-sans mt-0.5 ${isLight ? 'text-[#64748B]' : 'text-[#94A3B8]'}`}>↓ ₹48,200 Layered to ICICI A/C 772145 in 22 mins (12:10 PM IST) [EV-004]</div>
-              </div>
-
-              <div className={`group/hop p-2.5 rounded-xl border border-transparent transition-all cursor-pointer ${isLight ? 'hover:border-[#4F46E5]/50 hover:bg-[#EEF2FF]' : 'hover:border-[#FACC15]/50 hover:bg-[#FACC15]/10'}`}>
-                <div className={`flex items-center space-x-2.5 ${isLight ? 'text-[#0F172A]' : 'text-[#F8FAFC]'}`}>
-                  <span className={`w-2.5 h-2.5 rounded-full border transition-all ${isLight ? 'bg-slate-300 border-slate-400 group-hover/hop:scale-125 group-hover/hop:bg-[#4F46E5] group-hover/hop:border-[#4F46E5] group-hover/hop:shadow-[0_0_10px_rgba(79,70,229,0.8)]' : 'bg-white/20 border-white/30 group-hover/hop:scale-125 group-hover/hop:bg-[#FACC15] group-hover/hop:border-[#FACC15] group-hover/hop:shadow-[0_0_10px_rgba(250, 204, 21,0.8)]'}`} />
-                  <span className={`font-bold transition-colors ${isLight ? 'group-hover/hop:text-[#4F46E5]' : 'group-hover/hop:text-[#FACC15]'}`}>[Hop 5] XYZ Traders Pvt Ltd (Commercial Shell Beneficiary)</span>
-                </div>
-                <div className={`pl-5 text-xs font-sans mt-0.5 ${isLight ? 'text-[#64748B]' : 'text-[#94A3B8]'}`}>↓ Controlled by Offshore Beneficiary Vikram Singhania (Dubai Hub) [EV-009]</div>
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-              <div className="text-xs text-[#64748B] font-mono">
-                Certified Evidence: <span className="font-bold text-[#F8FAFC]">EV-001, EV-002, EV-003, EV-004</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowHiddenConnection(true);
-                  navigateTo('path');
-                }}
-                className="px-4 py-2 bg-[#FACC15]/15 hover:bg-[#FACC15] text-[#FACC15] hover:text-white border border-[#FACC15]/40 hover:border-[#FACC15] text-xs font-mono uppercase tracking-wider font-bold rounded-full flex items-center space-x-1.5 transition-all shadow-sm hover:shadow-[0_0_20px_rgba(250, 204, 21,0.5)] cursor-pointer group"
-              >
-                <span>Open Path Tracer</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Clustered Groups & Behavioral Anomalies */}

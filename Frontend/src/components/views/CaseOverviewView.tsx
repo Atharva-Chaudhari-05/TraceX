@@ -35,7 +35,7 @@ import { useInvestigation } from '../../context/InvestigationContext';
 // 1. INVESTIGATOR DASHBOARD ("What needs my attention?")
 // ==========================================
 const InvestigatorDashboard: React.FC = () => {
-  const { cases, currentCaseId, navigateTo, setSelectedEntityId, theme } = useInvestigation();
+  const { cases, currentCaseId, navigateTo, setSelectedEntityId, theme, entityMatch, aiInsights } = useInvestigation();
   const isLight = theme === 'light';
 
   const activeCasesList = cases.slice(0, 5).map((c: any) => ({
@@ -111,7 +111,9 @@ const InvestigatorDashboard: React.FC = () => {
 
         <div className="glass-card border border-white/10 p-5 rounded-2xl shadow-lg">
           <div className="text-[10px] font-mono uppercase tracking-wider text-[#64748B]">High Priority</div>
-          <div className="text-3xl font-bold font-mono text-[#EF4444] mt-2">0</div>
+          <div className="text-3xl font-bold font-mono text-[#EF4444] mt-2">
+            {activeCasesList.filter(c => c.priority === 'HIGH' || c.priority === 'High').length}
+          </div>
           <div className="text-[10px] font-mono text-[#EF4444] mt-1">Direct supervisor assignment</div>
         </div>
 
@@ -123,7 +125,9 @@ const InvestigatorDashboard: React.FC = () => {
             <span>Pending Resolutions</span>
             <GitMerge className="w-3.5 h-3.5 text-[#FACC15] group-hover:translate-x-0.5 transition-transform" />
           </div>
-          <div className="text-3xl font-bold font-mono text-[#FACC15] mt-2">0</div>
+          <div className="text-3xl font-bold font-mono text-[#FACC15] mt-2">
+            {entityMatch?.status === 'pending' ? 1 : 0}
+          </div>
           <div className="text-[10px] font-mono text-[#94A3B8] mt-1">Awaiting review</div>
         </div>
 
@@ -135,7 +139,9 @@ const InvestigatorDashboard: React.FC = () => {
             <span>New Intelligence</span>
             <Sparkles className="w-3.5 h-3.5 text-[#FACC15] animate-pulse" />
           </div>
-          <div className="text-3xl font-bold font-mono text-emerald-400 mt-2">0</div>
+          <div className="text-3xl font-bold font-mono text-emerald-400 mt-2">
+            {aiInsights?.filter(i => i.status === 'AI-Generated' || i.status === 'Pending Verification').length || 0}
+          </div>
           <div className="text-[10px] font-mono text-emerald-400/80 mt-1">Incoming AI cross-case alerts</div>
         </div>
       </div>
@@ -247,9 +253,27 @@ const InvestigatorDashboard: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              <div className="p-4 text-center text-[#64748B] text-xs font-mono">
-                No active highlights for the selected case.
-              </div>
+              {aiInsights && aiInsights.length > 0 ? (
+                <div className="space-y-2">
+                  {aiInsights.slice(0, 3).map(insight => (
+                    <div key={insight.id} className="p-3 bg-white/5 border border-white/10 rounded-xl">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs text-[#F8FAFC]">{insight.title}</span>
+                        <span className={`text-[9px] font-mono px-2 py-0.5 rounded-full ${insight.priority === 'high' ? 'bg-[#EF4444]/20 text-[#EF4444]' : 'bg-[#F59E0B]/20 text-[#F59E0B]'}`}>
+                          {insight.priorityLabel}
+                        </span>
+                      </div>
+                      <div className="text-[10px] text-[#94A3B8] mt-1 line-clamp-2">
+                        {insight.whatFound}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-4 text-center text-[#64748B] text-xs font-mono">
+                  No active highlights for the selected case.
+                </div>
+              )}
             </div>
           </div>
 
@@ -276,11 +300,15 @@ const InvestigatorDashboard: React.FC = () => {
               <div className="space-y-1.5 font-mono text-xs pt-1">
                 <div className="flex items-center justify-between p-2 bg-white/5 rounded-xl">
                   <span className="text-[#FACC15]">High confidence</span>
-                  <span className="font-bold text-[#F8FAFC]">0</span>
+                  <span className="font-bold text-[#F8FAFC]">
+                    {entityMatch?.status === 'pending' && entityMatch?.confidence >= 90 ? 1 : 0}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-2 bg-white/5 rounded-xl">
                   <span className="text-[#F59E0B]">Medium confidence</span>
-                  <span className="font-bold text-[#F8FAFC]">0</span>
+                  <span className="font-bold text-[#F8FAFC]">
+                    {entityMatch?.status === 'pending' && entityMatch?.confidence < 90 ? 1 : 0}
+                  </span>
                 </div>
               </div>
 
@@ -332,7 +360,7 @@ const InvestigatorDashboard: React.FC = () => {
 // 2. ANALYST DASHBOARD ("What does the data tell me?")
 // ==========================================
 const AnalystDashboard: React.FC = () => {
-  const { navigateTo, theme } = useInvestigation();
+  const { navigateTo, theme, cases, entities, networkAnalytics, aiInsights } = useInvestigation();
   const isLight = theme === 'light';
   const [analystSearch, setAnalystSearch] = useState('');
 
@@ -378,13 +406,13 @@ const AnalystDashboard: React.FC = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-card border border-white/10 p-5 rounded-2xl shadow-lg">
           <div className="text-[10px] font-mono uppercase tracking-wider text-[#64748B]">Cases Analyzed</div>
-          <div className="text-3xl font-bold font-mono text-[#F8FAFC] mt-2">0</div>
+          <div className="text-3xl font-bold font-mono text-[#F8FAFC] mt-2">{cases?.length || 0}</div>
           <div className="text-[10px] font-mono text-[#FACC15] mt-1">Cross-jurisdictional scope</div>
         </div>
 
         <div className="glass-card border border-white/10 p-5 rounded-2xl shadow-lg">
           <div className="text-[10px] font-mono uppercase tracking-wider text-[#64748B]">Key Individuals</div>
-          <div className="text-3xl font-bold font-mono text-[#FACC15] mt-2">0</div>
+          <div className="text-3xl font-bold font-mono text-[#FACC15] mt-2">{entities?.length || 0}</div>
           <div className="text-[10px] font-mono text-[#FACC15] mt-1">High eigenvector centrality</div>
         </div>
 
@@ -393,7 +421,9 @@ const AnalystDashboard: React.FC = () => {
           className="glass-card border border-white/10 hover:border-[#FACC15]/50 p-5 rounded-2xl shadow-lg cursor-pointer transition-all"
         >
           <div className="text-[10px] font-mono uppercase tracking-wider text-[#64748B]">Clusters</div>
-          <div className="text-3xl font-bold font-mono text-[#A855F7] mt-2">0</div>
+          <div className="text-3xl font-bold font-mono text-[#A855F7] mt-2">
+            {networkAnalytics?.communities ? Object.keys(networkAnalytics.communities).length : 0}
+          </div>
           <div className="text-[10px] font-mono text-[#A855F7] mt-1">Louvain community partitions</div>
         </div>
 
@@ -402,7 +432,9 @@ const AnalystDashboard: React.FC = () => {
           className="glass-card border border-white/10 hover:border-[#FACC15]/50 p-5 rounded-2xl shadow-lg cursor-pointer transition-all"
         >
           <div className="text-[10px] font-mono uppercase tracking-wider text-[#64748B]">Anomalies</div>
-          <div className="text-3xl font-bold font-mono text-[#EF4444] mt-2">0</div>
+          <div className="text-3xl font-bold font-mono text-[#EF4444] mt-2">
+            {aiInsights?.length || 0}
+          </div>
           <div className="text-[10px] font-mono text-[#EF4444] mt-1">Isolation Forest triggers</div>
         </div>
       </div>
@@ -575,7 +607,7 @@ const AnalystDashboard: React.FC = () => {
 // 3. ADMIN DASHBOARD ("Is the system working?")
 // ==========================================
 const AdminDashboard: React.FC = () => {
-  const { caseData, theme, navigateTo } = useInvestigation();
+  const { caseData, theme, navigateTo, cases, dataSources } = useInvestigation();
   const isLight = theme === 'light';
 
   return (
@@ -625,7 +657,7 @@ const AdminDashboard: React.FC = () => {
           className="glass-card border border-white/10 hover:border-[#FACC15]/50 p-5 rounded-2xl shadow-lg cursor-pointer transition-all"
         >
           <div className="text-[10px] font-mono uppercase tracking-wider text-[#64748B]">Data Jobs</div>
-          <div className="text-3xl font-bold font-mono text-[#FACC15] mt-2">0</div>
+          <div className="text-3xl font-bold font-mono text-[#FACC15] mt-2">{dataSources?.length || 0}</div>
           <div className="text-[10px] font-mono text-[#FACC15] mt-1">Active batch extractions</div>
         </div>
 

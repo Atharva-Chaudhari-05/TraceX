@@ -80,7 +80,17 @@ const MainInvestigationStage: React.FC = () => {
 };
 
 const AppContent: React.FC = () => {
-  const { isAuthenticated } = useInvestigation();
+  const { isAuthenticated, isInitializingAuth } = useInvestigation();
+
+  if (isInitializingAuth) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center bg-[#050507]">
+        <div className="text-emerald-500 font-mono tracking-widest text-sm animate-pulse">
+          INITIALIZING SECURE SESSION...
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <LoginView />;

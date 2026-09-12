@@ -24,9 +24,10 @@ import {
   File,
 } from 'lucide-react';
 import { useInvestigation } from '../../context/InvestigationContext';
+import { api } from '../../lib/api';
 
 export const DataSourcesView: React.FC = () => {
-  const { dataSources, addDataSource, navigateTo } = useInvestigation();
+  const { dataSources, addDataSource, navigateTo, caseData } = useInvestigation();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedSourceType, setSelectedSourceType] = useState<string>('cctns');
@@ -55,46 +56,83 @@ export const DataSourcesView: React.FC = () => {
     return <Radio className="w-5 h-5 text-rose-400" />;
   };
 
-  const handleStartIngestion = () => {
+  const handleStartIngestion = async () => {
+    if (!uploadedFile) return;
+    
     setIsProcessing(true);
     setIngestionStep(1);
 
-    setTimeout(() => {
+    const typeToFileMap: Record<string, string> = {
+      cctns: 'incidents.csv',
+      cdr: 'communication_events.csv',
+      banking: 'transactions.csv',
+      anpr: 'physical_access_events.csv',
+      osint: 'network_events.csv',
+      criminal_records: 'persons.csv',
+      intel_reports: 'organizations.csv'
+    };
+
+    const targetFileName = typeToFileMap[selectedSourceType] || uploadedFile.name;
+    
+    const formData = new FormData();
+    formData.append('file', uploadedFile, targetFileName);
+
+    try {
+      // 1. Upload to backend
+      await api.post('/api/v1/ingestion/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      
       setIngestionStep(2);
-      setTimeout(() => {
-        setIngestionStep(3);
-        setTimeout(() => {
-          setIngestionStep(4);
+
+      // 2. Poll for completion
+      const checkStatus = async () => {
+        try {
+          const res = await api.get('/api/v1/ingestion/status');
+          const batches = res.data;
+          // Find the most recent batch for this file
+          const recentBatch = batches.find((b: any) => b.file_name === targetFileName);
+          
+          if (!recentBatch || recentBatch.status === 'RUNNING' || recentBatch.status === 'PENDING') {
+            // Still processing
+            setIngestionStep(3);
+            setTimeout(checkStatus, 2000);
+          } else if (recentBatch.status === 'COMPLETED') {
+            // Finished successfully
+            setIngestionStep(4);
+            setTimeout(() => {
+              setIsProcessing(false);
+              const name = sourceName.trim() || targetFileName;
+              addDataSource({
+                name,
+                category: 'State Integrated Multimodal Feed',
+                recordCount: recentBatch.valid_records || 0,
+                sourceSystem: 'State Integrated Ingestion Pipeline',
+                fileFormat: selectedSourceType.toUpperCase(),
+                records: ['EV-001', 'EV-002'],
+                description: `Successfully ingested ${recentBatch.valid_records} canonical records into the Active Case graph.`,
+              });
+            }, 1000);
+          } else {
+            // Error
+            setIsProcessing(false);
+            alert(`Ingestion failed with status: ${recentBatch.status}`);
+          }
+        } catch (err) {
+          console.error('Status check failed:', err);
           setIsProcessing(false);
+          alert('Failed to fetch ingestion status.');
+        }
+      };
 
-          const name =
-            sourceName.trim() ||
-            (selectedSourceType === 'cctns'
-              ? 'State CCTNS Police FIR Supplementary Dairy'
-              : selectedSourceType === 'cdr'
-              ? 'Airtel & Jio Intercept Tower Dump (MUM-C4-89)'
-              : selectedSourceType === 'banking'
-              ? 'Core Banking SFMS Swift Wire Matrix'
-              : selectedSourceType === 'anpr'
-              ? 'Smart City ANPR Camera Optical Stream'
-              : selectedSourceType === 'osint'
-              ? 'Telegram Hawala Escrow & Darknet Forum Chatter'
-              : selectedSourceType === 'criminal_records'
-              ? 'ICJS Central Offender Database & Inter-State Warrants'
-              : 'FIU-IND Suspicious Transaction Report (STR/SAR)');
+      // Start polling
+      setTimeout(checkStatus, 2000);
 
-          addDataSource({
-            name,
-            category: 'State Integrated Multimodal Feed',
-            recordCount: Math.floor(Math.random() * 4) + 2,
-            sourceSystem: 'State Integrated Ingestion Pipeline',
-            fileFormat: selectedSourceType.toUpperCase(),
-            records: ['EV-001', 'EV-002'],
-            description: 'Automated data feed ingested and resolved into Operation Nexus graph ontology.',
-          });
-        }, 800);
-      }, 700);
-    }, 700);
+    } catch (err) {
+      console.error('Upload failed:', err);
+      setIsProcessing(false);
+      alert('Failed to upload file to the ingestion pipeline.');
+    }
   };
 
   const resetModal = () => {
@@ -120,8 +158,8 @@ export const DataSourcesView: React.FC = () => {
   const STREAM_FORMAT_HINTS: Record<string, { label: string; formats: string; accept: string }> = {
     cctns: {
       label: 'Police Reports & FIRs (CCTNS Case Diaries)',
-      formats: '.pdf, .txt, .docx',
-      accept: '.pdf,.txt,.docx',
+      formats: '.pdf, .txt, .docx, .csv',
+      accept: '.pdf,.txt,.docx,.csv',
     },
     cdr: {
       label: 'Communication Records (Telecom CDR & Tower Logs)',
@@ -140,8 +178,8 @@ export const DataSourcesView: React.FC = () => {
     },
     osint: {
       label: 'Social Media OSINT (Dark Web & Telegram Feeds)',
-      formats: '.json, .txt, .html',
-      accept: '.json,.txt,.html',
+      formats: '.json, .txt, .html, .csv',
+      accept: '.json,.txt,.html,.csv',
     },
     criminal_records: {
       label: 'Criminal History (ICJS Warrants & Prior Arrests)',
@@ -150,8 +188,8 @@ export const DataSourcesView: React.FC = () => {
     },
     intel_reports: {
       label: 'Intelligence Agency (FIU-IND STR/SAR Alerts)',
-      formats: '.xml, .str, .pdf, .json',
-      accept: '.xml,.str,.pdf,.json',
+      formats: '.xml, .str, .pdf, .json, .csv',
+      accept: '.xml,.str,.pdf,.json,.csv',
     },
   };
 
@@ -465,7 +503,7 @@ export const DataSourcesView: React.FC = () => {
                       Feed Ingestion &amp; Graph Mapping Complete
                     </div>
                     <p className="text-xs text-[#94A3B8] font-sans">
-                      Entities successfully extracted and linked to Operation Nexus topology.
+                      Entities successfully extracted and linked to {caseData?.name || 'Active Case'} topology.
                     </p>
                   </div>
                   <div className="pt-2 flex items-center justify-center space-x-2">

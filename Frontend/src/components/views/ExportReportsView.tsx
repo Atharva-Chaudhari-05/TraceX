@@ -76,11 +76,7 @@ INTEGRITY SEAL  : SHA-256 VERIFIED (SEAL-65B-NX-2026-AUTHENTIC)
 ${caseData.description}
 
 JUDICIAL SIGNIFICANCE:
-Multi-source entity resolution identified an indirect financial and logistical conduit
-linking primary target Rahul Sharma to commercial enterprise XYZ Traders via field
-intermediary Ajay Patil (resolved with 94% confidence to bank signatory A. Patil) and
-corporate signatory Neha Verma. Conclusively proves criminal conspiracy under Section
-120B IPC and structured layering under PMLA.
+${caseData.description || 'No verified record available.'}
 
 --------------------------------------------------------------------------------
 2. AI INSIGHTS & INFERENCES
@@ -204,14 +200,15 @@ Timestamp: ${new Date().toISOString()}
           currentY += 4.5;
 
           doc.setFont('helvetica', 'normal');
-          doc.setFontSize(8);
+          doc.setFontSize(8.5);
           doc.setTextColor(darkText[0], darkText[1], darkText[2]);
-          const synopsis = doc.splitTextToSize(
-            `${caseData.description} Multi-source entity resolution identified an indirect financial and logistical conduit linking primary target Rahul Sharma to commercial enterprise XYZ Traders via field intermediary Ajay Patil (resolved with 94% confidence to bank signatory A. Patil) and corporate signatory Neha Verma. Conclusively proves criminal conspiracy under Section 120B IPC and money laundering under PMLA.`,
+          
+          const synopsisLines = doc.splitTextToSize(
+            caseData.description || 'No verified record available.',
             pageWidth - 28
           );
-          doc.text(synopsis, 14, currentY);
-          currentY += synopsis.length * 3.8 + 6;
+          doc.text(synopsisLines, 14, currentY);
+          currentY += synopsisLines.length * 4 + 6;
 
           // 4. AI Insights Box
           doc.setFillColor(240, 249, 255);
@@ -634,7 +631,7 @@ Timestamp: ${new Date().toISOString()}
             {includedSections.subjectProfiles && (
               <div className="space-y-3">
                 <h3 className="text-sm font-bold text-[#F8FAFC] print:text-black border-b border-white/10 print:border-gray-300 pb-2 uppercase tracking-wide font-mono">
-                  2. Master Indexed Entities Analysis (Operation Nexus)
+                  2. Master Indexed Entities Analysis ({caseData?.name || 'Active Case'})
                 </h3>
                 <div className={`overflow-hidden rounded-3xl border shadow-lg backdrop-blur-xl ${
                   isLight ? 'border-slate-200 bg-white' : 'border-white/10 glass-card'
